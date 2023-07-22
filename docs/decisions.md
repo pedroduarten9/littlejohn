@@ -60,6 +60,10 @@ Sending no page is the same as sending page = 1.
 
 The validations were done in code as there was just one on the pagination, if there was more it would be good to tag the structs and use the validator from golang to validate structs.
 
+## Testing
+
+As there were no other services running, no mocing was needed in order to test the application successfully.
+
 ## Others
 
 ExistsTicker is concrete to Tickers for the sake of simplicity, could be generalized to every type of slice easily.
