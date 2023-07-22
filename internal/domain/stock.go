@@ -45,3 +45,12 @@ var Tickers = []Ticker{
 	"CRM",
 	"NFLX",
 }
+
+func ExistsTicker(ticker Ticker) bool {
+	for _, t := range Tickers {
+		if t == ticker {
+			return true
+		}
+	}
+	return false
+}

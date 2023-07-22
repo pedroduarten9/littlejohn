@@ -16,7 +16,7 @@ func GenerateStocks(username string, date time.Time) []Stock {
 	for i, ticker := range tickers {
 		stocks[i] = Stock{
 			Symbol: string(ticker),
-			Price:  generatePrice(formattedDate, ticker),
+			Price:  generateCurrency(formattedDate, ticker),
 		}
 	}
 	return stocks
@@ -47,7 +47,28 @@ func generateTickerIdx(selectedTickers map[int]bool) int {
 	return tickerIdx
 }
 
-func generatePrice(date string, ticker Ticker) Currency {
+func GenerateStockPrices(date time.Time, ticker Ticker, days int) []StockPrice {
+	stockPrices := make([]StockPrice, days)
+	for i := 0; i < days; i++ {
+		stockDate := date.Add(time.Duration(-i) * time.Hour * 24)
+		stockPrices[i] = generateStockPrice(stockDate, ticker)
+	}
+
+	return stockPrices
+}
+
+func generateStockPrice(date time.Time, ticker Ticker) StockPrice {
+	formattedDate := date.Format(time.DateOnly)
+	seed := generateSeedFromString(formattedDate + string(ticker))
+	rand.Seed(seed)
+
+	return StockPrice{
+		Date:  formattedDate,
+		Price: generateCurrency(formattedDate, ticker),
+	}
+}
+
+func generateCurrency(date string, ticker Ticker) Currency {
 	seed := generateSeedFromString(date + string(ticker))
 	rand.Seed(seed)
 

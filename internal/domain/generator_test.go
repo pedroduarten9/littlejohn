@@ -65,3 +65,32 @@ func TestGenerateStocks_DifferentDay_DifferentUser(t *testing.T) {
 	assert.False(t, reflect.DeepEqual(stocksDay1, stocksDay2))
 
 }
+
+func TestGenerateStockPrices(t *testing.T) {
+	// Arrange
+	ticker := Ticker("CRM")
+	date := time.Date(2023, 3, 3, 3, 3, 12, 0, time.UTC)
+	days := 2
+
+	expectedStockPrices := []StockPrice{
+		{
+			Date: "2023-03-03",
+			Price: Currency{
+				units: int64(1636),
+				cents: int32(9),
+			},
+		},
+		{
+			Date: "2023-03-02",
+			Price: Currency{
+				units: int64(1276),
+				cents: int32(16),
+			},
+		},
+	}
+	// Act
+	stockPrices := GenerateStockPrices(date, ticker, days)
+
+	// Assert
+	assert.ElementsMatch(t, expectedStockPrices, stockPrices)
+}
