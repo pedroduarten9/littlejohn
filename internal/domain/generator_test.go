@@ -74,14 +74,14 @@ func TestGenerateStockPrices(t *testing.T) {
 
 	expectedStockPrices := []StockPrice{
 		{
-			Date: "2023-03-03",
+			Date: time.Date(2023, 3, 3, 3, 3, 12, 0, time.UTC),
 			Price: Currency{
 				units: int64(1636),
 				cents: int32(9),
 			},
 		},
 		{
-			Date: "2023-03-02",
+			Date: time.Date(2023, 3, 2, 3, 3, 12, 0, time.UTC),
 			Price: Currency{
 				units: int64(1276),
 				cents: int32(16),

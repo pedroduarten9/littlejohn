@@ -7,7 +7,6 @@ import (
 	"littlejohn/internal/domain"
 	"net/http"
 	"strings"
-	"time"
 
 	"github.com/benbjohnson/clock"
 	openapi_types "github.com/deepmap/oapi-codegen/pkg/types"
@@ -63,9 +62,8 @@ func convertStocks(domainStocks []domain.Stock) []Stock {
 func convertStockPrices(domainStockPrices []domain.StockPrice) []StockPrice {
 	stockPrices := make([]StockPrice, len(domainStockPrices))
 	for i, domainStockPrice := range domainStockPrices {
-		date, _ := time.Parse(time.DateOnly, domainStockPrice.Date)
 		stockPrices[i] = StockPrice{
-			Date:  openapi_types.Date{date},
+			Date:  openapi_types.Date{domainStockPrice.Date},
 			Price: domainStockPrice.Price.String(),
 		}
 	}

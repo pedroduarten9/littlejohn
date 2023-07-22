@@ -1,6 +1,9 @@
 package domain
 
-import "fmt"
+import (
+	"fmt"
+	"time"
+)
 
 type Currency struct {
 	units int64
@@ -17,7 +20,7 @@ type Stock struct {
 }
 
 type StockPrice struct {
-	Date  string
+	Date  time.Time
 	Price Currency
 }
 

@@ -63,7 +63,7 @@ func generateStockPrice(date time.Time, ticker Ticker) StockPrice {
 	rand.Seed(seed)
 
 	return StockPrice{
-		Date:  formattedDate,
+		Date:  date,
 		Price: generateCurrency(formattedDate, ticker),
 	}
 }
