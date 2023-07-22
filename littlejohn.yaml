@@ -1,0 +1,111 @@
+openapi: 3.0.0
+info:
+  title: Little John API
+  description: Fictional brokerage service
+  version: 1.0.0
+
+servers:
+  - url: http://localhost:8000
+
+components:
+  securitySchemes:
+    basicAuth:
+      type: http
+      scheme: basic
+
+  parameters:
+    StockPath:
+      name: stock
+      in: path
+      required: true
+      schema:
+        type: string
+
+  schemas:
+    Stocks:
+      schema: 
+        type: array
+        items: 
+          $ref: '#/components/schemas/Stock'
+
+    Stock:
+      type: object
+      properties:
+        symbol:
+          type: string
+        price:
+          type: string
+          format: number
+      required:
+        - symbol
+        - price
+
+    StockPrices:
+      schema: 
+        type: array
+        items: 
+          $ref: '#/components/schemas/StockPrice'
+
+    StockPrice:
+      type: object
+      properties:
+        date:
+          type: string
+          format: date
+        price:
+          type: string
+          format: number
+
+      required:
+        - date
+        - price
+
+    Error:
+      type: object
+      properties:
+        message:
+          type: string
+      required:
+        - message
+
+  responses:
+    UnauthorizedError:
+      description: Authentication information is missing or invalid
+      headers:
+        WWW_Authenticate:
+          schema:
+            $ref: '#/components/schemas/Error'
+
+security:
+  - basicAuth: []
+
+paths:
+  /tickers:
+    get:
+      operationId: tickers
+      description: List of stocks with their ticker and today's price.
+      responses:
+        '200':
+          description: Successfully returned the list of stocks
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Stocks'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+
+  /tickers/{stock}/history:
+    get:
+      operationId: stockHistory
+      description: fluctuation in price for the given sticket in the last 90 days.
+      parameters:
+        - $ref: '#/components/parameters/StockPath'
+      responses:
+        '200':
+          description: Successfully returned the time series of the stock
+          content:
+            appliaction/json:
+              schema:
+                $ref: '#/components/schemas/StockPrices'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
