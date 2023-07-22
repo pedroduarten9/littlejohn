@@ -21,6 +21,8 @@ func main() {
 	e.Use(api.AuthenticationMiddleware())
 	e.Use(middleware.Recover())
 
+	e.HTTPErrorHandler = api.HttpErrorHandler
+
 	api.RegisterHandlers(e, api.New(clock.New(), days))
 	e.Logger.Fatal(e.Start(":8000"))
 }
