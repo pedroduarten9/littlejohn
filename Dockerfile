@@ -10,13 +10,9 @@ RUN go mod download
 
 COPY . .
 
-RUN CGO_ENABLED=0 go build -o /api cmd/api.go
-
-#
-# Test stage
-#
-FROM build-stage AS run-test-stage
+# Tests
 RUN go test -v ./...
+RUN CGO_ENABLED=0 go build -o /api cmd/api.go
 
 #
 # Release stage
