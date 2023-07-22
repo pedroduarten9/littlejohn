@@ -107,5 +107,11 @@ paths:
             appliaction/json:
               schema:
                 $ref: '#/components/schemas/StockPrices'
+        '404':
+          description: Stock ticker not found
+          content:
+            appliaction/json:
+              schema:
+                $ref: '#/components/schemas/Error'
         '401':
           $ref: '#/components/responses/UnauthorizedError'

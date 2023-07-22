@@ -10,6 +10,8 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
+const days = 90
+
 func main() {
 	e := echo.New()
 
@@ -19,6 +21,6 @@ func main() {
 	e.Use(api.AuthenticationMiddleware())
 	e.Use(middleware.Recover())
 
-	api.RegisterHandlers(e, api.New(clock.New()))
+	api.RegisterHandlers(e, api.New(clock.New(), days))
 	e.Logger.Fatal(e.Start(":8000"))
 }

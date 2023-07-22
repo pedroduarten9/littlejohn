@@ -1,6 +1,7 @@
 package api
 
 import (
+	"fmt"
 	"net/http"
 
 	"github.com/labstack/echo/v4"
@@ -50,5 +51,11 @@ func AuthenticationMiddleware() echo.MiddlewareFunc {
 }
 
 func HttpErrorHandler(err error, ctx echo.Context) {
-	ctx.JSON(http.StatusInternalServerError, Error{Message: err.Error()})
+	switch e := err.(type) {
+	case NotFoundError:
+		ctx.JSON(http.StatusNotFound, Error{Message: err.Error()})
+	default:
+		fmt.Print(e)
+		ctx.JSON(http.StatusInternalServerError, Error{Message: err.Error()})
+	}
 }
