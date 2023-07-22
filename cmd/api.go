@@ -23,6 +23,6 @@ func main() {
 
 	e.HTTPErrorHandler = api.HttpErrorHandler
 
-	api.RegisterHandlers(e, api.New(clock.New(), days))
+	api.RegisterHandlers(e, api.New(clock.New(), logger, days))
 	e.Logger.Fatal(e.Start(":8000"))
 }

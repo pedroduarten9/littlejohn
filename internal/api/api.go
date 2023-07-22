@@ -12,17 +12,20 @@ import (
 	"github.com/benbjohnson/clock"
 	openapi_types "github.com/deepmap/oapi-codegen/pkg/types"
 	"github.com/labstack/echo/v4"
+	"go.uber.org/zap"
 )
 
 type API struct {
-	clock clock.Clock
-	days  int
+	clock  clock.Clock
+	logger *zap.Logger
+	days   int
 }
 
-func New(clock clock.Clock, days int) ServerInterface {
+func New(clock clock.Clock, logger *zap.Logger, days int) ServerInterface {
 	return &API{
-		clock: clock,
-		days:  days,
+		clock:  clock,
+		logger: logger,
+		days:   days,
 	}
 }
 
@@ -36,7 +39,9 @@ func (a API) StockHistory(ctx echo.Context, stock StockPath) error {
 	ticker := domain.Ticker(strings.ToUpper(string(stock)))
 
 	if !domain.ExistsTicker(ticker) {
-		return NotFoundError{msg: fmt.Sprintf("Ticker %s not found", stock)}
+		err := NotFoundError{msg: fmt.Sprintf("Ticker %s not found", stock)}
+		a.logger.Error(err.Error())
+		return err
 	}
 
 	stockPrices := domain.GenerateStockPrices(a.clock.Now(), ticker, a.days)

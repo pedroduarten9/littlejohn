@@ -8,19 +8,22 @@ import (
 	"github.com/benbjohnson/clock"
 	"github.com/labstack/echo/v4"
 	"github.com/stretchr/testify/assert"
+	"go.uber.org/zap"
 )
 
 func TestNew(t *testing.T) {
 	// Act
 	mockClock := clock.NewMock()
 	days := 90
-	api := New(mockClock, days)
+	logger, _ := zap.NewDevelopment()
+	api := New(mockClock, logger, days)
 
 	//Assert
 	assert.Implements(t, (*ServerInterface)(nil), api)
 
 	concreteAPI := api.(*API)
 	assert.Equal(t, mockClock, concreteAPI.clock)
+	assert.Equal(t, logger, concreteAPI.logger)
 	assert.Equal(t, days, concreteAPI.days)
 }
 
@@ -34,8 +37,9 @@ func TestTickers(t *testing.T) {
 	rec := httptest.NewRecorder()
 	c := e.NewContext(req, rec)
 	c.Set(userKey, username)
+	logger, _ := zap.NewDevelopment()
 	s := ServerInterfaceWrapper{
-		Handler: New(mockClock, days),
+		Handler: New(mockClock, logger, days),
 	}
 
 	tickersJSON := `[
@@ -80,8 +84,9 @@ func TestStockHistory(t *testing.T) {
 	c.Set(userKey, username)
 	c.SetParamNames("stock")
 	c.SetParamValues(stock)
+	logger, _ := zap.NewDevelopment()
 	s := ServerInterfaceWrapper{
-		Handler: New(mockClock, days),
+		Handler: New(mockClock, logger, days),
 	}
 
 	stockHistoryJSON := `[
@@ -127,8 +132,9 @@ func TestStockHistory_NotFound(t *testing.T) {
 	c.Set(userKey, username)
 	c.SetParamNames("stock")
 	c.SetParamValues(stock)
+	logger, _ := zap.NewDevelopment()
 	s := ServerInterfaceWrapper{
-		Handler: New(mockClock, days),
+		Handler: New(mockClock, logger, days),
 	}
 
 	expectedError := NotFoundError{
