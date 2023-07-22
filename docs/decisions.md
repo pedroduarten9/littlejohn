@@ -39,3 +39,9 @@ A request ID was added to easily integrate and debug with other systems, hence i
 ### Basic auth
 
 Authentation does only check for if the username is set and password is mandatory to be empty, if one of this requirements is violated the user will be unauthorized.
+
+## Generation
+
+### Tickers choice
+
+To choose tickers I choose to have only username as the seed, this has tradeoffs as the user will keep the same seeds forever, it could be interesting to add some more logic here like add the month to the seed so that the user changes tickers every month, other option would be to apply probabilistic and they had like x% chance of changing tickers every day or month. This behavious would be very easy to achieve.
