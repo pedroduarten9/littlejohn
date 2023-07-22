@@ -1,9 +1,11 @@
 package main
 
 import (
+	"littlejohn/internal/api"
+
+	"github.com/benbjohnson/clock"
 	"github.com/labstack/echo/v4/middleware"
 	"go.uber.org/zap"
-	"littlejohn/internal/api"
 
 	"github.com/labstack/echo/v4"
 )
@@ -17,6 +19,6 @@ func main() {
 	e.Use(api.AuthenticationMiddleware())
 	e.Use(middleware.Recover())
 
-	api.RegisterHandlers(e, api.NewAPI())
+	api.RegisterHandlers(e, api.New(clock.New()))
 	e.Logger.Fatal(e.Start(":8000"))
 }

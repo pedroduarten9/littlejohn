@@ -10,6 +10,8 @@ import (
 	"go.uber.org/zap"
 )
 
+const userKey = "user"
+
 func RequestIDMiddleware() echo.MiddlewareFunc {
 	return middleware.RequestIDWithConfig(middleware.RequestIDConfig{
 		Generator: func() string {
@@ -39,6 +41,7 @@ func LoggerMiddleware(logger *zap.Logger) echo.MiddlewareFunc {
 func AuthenticationMiddleware() echo.MiddlewareFunc {
 	return middleware.BasicAuth(func(username, password string, c echo.Context) (bool, error) {
 		if username != "" && password == "" {
+			c.Set(userKey, username)
 			return true, nil
 		}
 
