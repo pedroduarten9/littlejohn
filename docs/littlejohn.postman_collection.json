@@ -31,7 +31,7 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:8000/tickers/AAPL/history",
+					"raw": "http://localhost:8000/tickers/:ticker/history",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -39,8 +39,14 @@
 					"port": "8000",
 					"path": [
 						"tickers",
-						"AAPL",
+						":ticker",
 						"history"
+					],
+					"variable": [
+						{
+							"key": "ticker",
+							"value": "CRM"
+						}
 					]
 				}
 			},
@@ -52,7 +58,12 @@
 		"basic": [
 			{
 				"key": "username",
-				"value": "someuser",
+				"value": "aaaaa",
+				"type": "string"
+			},
+			{
+				"key": "password",
+				"value": "",
 				"type": "string"
 			}
 		]
