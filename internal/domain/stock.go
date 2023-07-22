@@ -12,7 +12,7 @@ func (c Currency) String() string {
 }
 
 type Stock struct {
-	Symbol string
+	Ticker string
 	Price  Currency
 }
 

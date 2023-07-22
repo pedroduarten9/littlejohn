@@ -15,7 +15,7 @@ func GenerateStocks(username string, date time.Time) []Stock {
 	stocks := make([]Stock, len(tickers))
 	for i, ticker := range tickers {
 		stocks[i] = Stock{
-			Symbol: string(ticker),
+			Ticker: string(ticker),
 			Price:  generateCurrency(formattedDate, ticker),
 		}
 	}

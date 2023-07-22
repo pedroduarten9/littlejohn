@@ -41,19 +41,19 @@ func TestTickers(t *testing.T) {
 	tickersJSON := `[
 		{
 			"price": "366.34",
-			"symbol": "GOOG"
+			"ticker": "GOOG"
 		},
 		{
 			"price": "2965.49",
-			"symbol": "NVDA"
+			"ticker": "NVDA"
 		},
 		{
 			"price": "1682.45",
-			"symbol": "JNJ"
+			"ticker": "JNJ"
 		},
 		{
 			"price": "2179.59",
-			"symbol": "AMZN"
+			"ticker": "AMZN"
 		}
 	]`
 

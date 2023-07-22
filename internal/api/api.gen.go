@@ -24,7 +24,7 @@ type Error struct {
 // Stock defines model for Stock.
 type Stock struct {
 	Price  string `json:"price"`
-	Symbol string `json:"symbol"`
+	Ticker string `json:"ticker"`
 }
 
 // StockPrice defines model for StockPrice.

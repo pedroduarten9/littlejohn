@@ -31,13 +31,13 @@ components:
     Stock:
       type: object
       properties:
-        symbol:
+        ticker:
           type: string
         price:
           type: string
           format: number
       required:
-        - symbol
+        - ticker
         - price
 
     StockPrices:

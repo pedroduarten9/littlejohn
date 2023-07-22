@@ -48,7 +48,7 @@ func convertStocks(domainStocks []domain.Stock) []Stock {
 	for i, domainStock := range domainStocks {
 		stocks[i] = Stock{
 			Price:  domainStock.Price.String(),
-			Symbol: domainStock.Symbol,
+			Ticker: domainStock.Ticker,
 		}
 	}
 
