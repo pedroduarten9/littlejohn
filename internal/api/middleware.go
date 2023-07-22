@@ -52,6 +52,8 @@ func AuthenticationMiddleware() echo.MiddlewareFunc {
 
 func HttpErrorHandler(err error, ctx echo.Context) {
 	switch e := err.(type) {
+	case BadRequestError:
+		ctx.JSON(http.StatusBadRequest, Error{Message: err.Error()})
 	case NotFoundError:
 		ctx.JSON(http.StatusNotFound, Error{Message: err.Error()})
 	default:

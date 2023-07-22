@@ -31,7 +31,7 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:8000/tickers/:ticker/history",
+					"raw": "http://localhost:8000/tickers/:ticker/history?page=0",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -42,10 +42,16 @@
 						":ticker",
 						"history"
 					],
+					"query": [
+						{
+							"key": "page",
+							"value": "0"
+						}
+					],
 					"variable": [
 						{
 							"key": "ticker",
-							"value": "CRM"
+							"value": "GOOG"
 						}
 					]
 				}

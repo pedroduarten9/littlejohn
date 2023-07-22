@@ -39,8 +39,16 @@ type StockPrices = interface{}
 // Stocks defines model for Stocks.
 type Stocks = interface{}
 
+// PageQuery defines model for PageQuery.
+type PageQuery = int
+
 // StockPath defines model for StockPath.
 type StockPath = string
+
+// StockHistoryParams defines parameters for StockHistory.
+type StockHistoryParams struct {
+	Page *PageQuery `form:"page,omitempty" json:"page,omitempty"`
+}
 
 // ServerInterface represents all server handlers.
 type ServerInterface interface {
@@ -49,7 +57,7 @@ type ServerInterface interface {
 	Tickers(ctx echo.Context) error
 
 	// (GET /tickers/{stock}/history)
-	StockHistory(ctx echo.Context, stock StockPath) error
+	StockHistory(ctx echo.Context, stock StockPath, params StockHistoryParams) error
 }
 
 // ServerInterfaceWrapper converts echo contexts to parameters.
@@ -81,8 +89,17 @@ func (w *ServerInterfaceWrapper) StockHistory(ctx echo.Context) error {
 
 	ctx.Set(BasicAuthScopes, []string{})
 
+	// Parameter object where we will unmarshal all parameters from the context
+	var params StockHistoryParams
+	// ------------- Optional query parameter "page" -------------
+
+	err = runtime.BindQueryParameter("form", true, false, "page", ctx.QueryParams(), &params.Page)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter page: %s", err))
+	}
+
 	// Invoke the callback with all the unmarshalled arguments
-	err = w.Handler.StockHistory(ctx, stock)
+	err = w.Handler.StockHistory(ctx, stock, params)
 	return err
 }
 

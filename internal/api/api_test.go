@@ -3,6 +3,7 @@ package api
 import (
 	"net/http"
 	"net/http/httptest"
+	"strconv"
 	"testing"
 
 	"github.com/benbjohnson/clock"
@@ -116,6 +117,120 @@ func TestStockHistory(t *testing.T) {
 		assert.Equal(t, http.StatusOK, rec.Code)
 		assert.JSONEq(t, stockHistoryJSON, rec.Body.String())
 	}
+
+}
+
+func TestStockHistory_ThirdPage(t *testing.T) {
+	// Arrange
+	username := "a"
+	days := 4
+	stock := "GOOG"
+	page := "3"
+	mockClock := clock.NewMock()
+	e := echo.New()
+	req := httptest.NewRequest(http.MethodGet, "/tickers/:stock/history", nil)
+	rec := httptest.NewRecorder()
+	c := e.NewContext(req, rec)
+	c.Set(userKey, username)
+	c.SetParamNames("stock")
+	c.SetParamValues(stock)
+	c.QueryParams()["page"] = []string{page}
+	logger, _ := zap.NewDevelopment()
+	s := ServerInterfaceWrapper{
+		Handler: New(mockClock, logger, days),
+	}
+
+	stockHistoryJSON := `[
+		{
+			"price": "1228.33",
+			"date": "1969-12-24"
+		},
+		{
+			"price": "1391.30",
+			"date": "1969-12-23"
+		},
+		{
+			"price": "2624.49",
+			"date": "1969-12-22"
+		},
+		{
+			"price": "1540.48",
+			"date": "1969-12-21"
+		}
+	]`
+
+	// Act
+	err := s.StockHistory(c)
+
+	// Assert
+	if assert.NoError(t, err) {
+		assert.Equal(t, http.StatusOK, rec.Code)
+		assert.JSONEq(t, stockHistoryJSON, rec.Body.String())
+	}
+
+}
+
+func TestStockHistory_0Page(t *testing.T) {
+	// Arrange
+	username := "a"
+	days := 4
+	stock := "GOOG"
+	page := "0"
+	mockClock := clock.NewMock()
+	e := echo.New()
+	req := httptest.NewRequest(http.MethodGet, "/tickers/:stock/history", nil)
+	rec := httptest.NewRecorder()
+	c := e.NewContext(req, rec)
+	c.Set(userKey, username)
+	c.SetParamNames("stock")
+	c.SetParamValues(stock)
+	c.QueryParams()["page"] = []string{page}
+	logger, _ := zap.NewDevelopment()
+	s := ServerInterfaceWrapper{
+		Handler: New(mockClock, logger, days),
+	}
+
+	expectedError := BadRequestError{
+		msg: "Page " + page + " is lower than min page " + strconv.Itoa(minPage),
+	}
+
+	// Act
+	err := s.StockHistory(c)
+
+	// Assert
+	assert.Equal(t, expectedError, err)
+
+}
+
+func TestStockHistory_MaxPage(t *testing.T) {
+	// Arrange
+	username := "a"
+	days := 4
+	stock := "GOOG"
+	page := "54"
+	mockClock := clock.NewMock()
+	e := echo.New()
+	req := httptest.NewRequest(http.MethodGet, "/tickers/:stock/history", nil)
+	rec := httptest.NewRecorder()
+	c := e.NewContext(req, rec)
+	c.Set(userKey, username)
+	c.SetParamNames("stock")
+	c.SetParamValues(stock)
+	c.QueryParams()["page"] = []string{page}
+	logger, _ := zap.NewDevelopment()
+	s := ServerInterfaceWrapper{
+		Handler: New(mockClock, logger, days),
+	}
+
+	expectedError := BadRequestError{
+		msg: "Page " + page + " is bigger than max page " + strconv.Itoa(maxPage),
+	}
+
+	// Act
+	err := s.StockHistory(c)
+
+	// Assert
+	assert.Equal(t, expectedError, err)
 
 }
 

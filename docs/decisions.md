@@ -50,6 +50,16 @@ To choose tickers I choose to have only username as the seed, this has tradeoffs
 
 The stock price history will be generated based on the stock and the date, this way the same stock with the same date will always have the same price.
 
+## Pagination
+
+As required I added pagination with just the page, it could be achieved with an offset and limit, or page and limit as well.
+I limited to 40 weeks max which is approximately 10 years.
+Sending no page is the same as sending page = 1.
+
+## Validation
+
+The validations were done in code as there was just one on the pagination, if there was more it would be good to tag the structs and use the validator from golang to validate structs.
+
 ## Others
 
 ExistsTicker is concrete to Tickers for the sake of simplicity, could be generalized to every type of slice easily.

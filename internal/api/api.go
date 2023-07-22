@@ -7,12 +7,17 @@ import (
 	"littlejohn/internal/domain"
 	"net/http"
 	"strings"
+	"time"
 
 	"github.com/benbjohnson/clock"
 	openapi_types "github.com/deepmap/oapi-codegen/pkg/types"
 	"github.com/labstack/echo/v4"
 	"go.uber.org/zap"
 )
+
+// This is approximately 10 years
+const maxPage = 41
+const minPage = 1
 
 type API struct {
 	clock  clock.Clock
@@ -34,7 +39,18 @@ func (a API) Tickers(ctx echo.Context) error {
 	return ctx.JSON(http.StatusOK, convertStocks(stocks))
 }
 
-func (a API) StockHistory(ctx echo.Context, stock StockPath) error {
+func (a API) StockHistory(ctx echo.Context, stock StockPath, params StockHistoryParams) error {
+	page := 1
+	if params.Page != nil {
+		page = *params.Page
+	}
+
+	if errMsg, valid := validatePage(page); !valid {
+		err := BadRequestError{msg: errMsg}
+		a.logger.Error(err.Error())
+		return err
+	}
+
 	ticker := domain.Ticker(strings.ToUpper(string(stock)))
 
 	if !domain.ExistsTicker(ticker) {
@@ -43,8 +59,20 @@ func (a API) StockHistory(ctx echo.Context, stock StockPath) error {
 		return err
 	}
 
-	stockPrices := domain.GenerateStockPrices(a.clock.Now(), ticker, a.days)
+	startDate := a.clock.Now().Add(time.Duration(-(page-1)*a.days) * time.Hour * 24)
+	stockPrices := domain.GenerateStockPrices(startDate, ticker, a.days)
 	return ctx.JSON(http.StatusOK, convertStockPrices(stockPrices))
+}
+
+func validatePage(page int) (string, bool) {
+	if page > maxPage {
+		return fmt.Sprintf("Page %d is bigger than max page %d", page, maxPage), false
+	}
+	if page < minPage {
+		return fmt.Sprintf("Page %d is lower than min page %d", page, minPage), false
+	}
+
+	return "", true
 }
 
 func convertStocks(domainStocks []domain.Stock) []Stock {
