@@ -6,7 +6,7 @@ This file will have the guidelines to use the application
 
 Have Docker installed and running.
 
-# How to start the server
+## How to start the server
 
 In order to start the server a helper file was created `run.sh`. This file builds the image and runs the container with the application.  
 It accepts a flag `-b` that when defined builds the image before executing the container (first invocation needs this flag).
@@ -14,7 +14,7 @@ It accepts a flag `-b` that when defined builds the image before executing the c
 ## How to interact with the application
 
 There has been added a [postman collection](./littlejohn.postman_collection.json) to ease the exercising of the application.
-If one wants to rely on curl instead, the request defintions are as follows:
+If one wants to rely on curl instead, the request definitions are as follows:
 
 ### Tickers
 ```
