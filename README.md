@@ -1,6 +1,6 @@
 # Overview
 
-This application is a ficticious brokerage service where users hold a portfolio of stocks
+This application is a fictitious brokerage service where users hold a portfolio of stocks
 
 ## Docs
 
