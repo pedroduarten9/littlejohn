@@ -46,7 +46,7 @@ func AuthenticationMiddleware() echo.MiddlewareFunc {
 			return true, nil
 		}
 
-		return false, nil
+		return false, AuthError{msg: "Unauthorized"}
 	})
 }
 
@@ -56,6 +56,9 @@ func HttpErrorHandler(err error, ctx echo.Context) {
 		ctx.JSON(http.StatusBadRequest, Error{Message: err.Error()})
 	case NotFoundError:
 		ctx.JSON(http.StatusNotFound, Error{Message: err.Error()})
+	case AuthError:
+		ctx.Response().Header().Set(echo.HeaderWWWAuthenticate, "basic realm=Restricted")
+		ctx.JSON(http.StatusUnauthorized, Error{Message: err.Error()})
 	default:
 		fmt.Print(e)
 		ctx.JSON(http.StatusInternalServerError, Error{Message: err.Error()})
